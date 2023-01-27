@@ -6,7 +6,7 @@ from tkinter import font, colorchooser, filedialog
 import os
 
 # #################
-# FUNCTIONALITIES #
+# FUNCTIONALITIES ##
 ###################
 
 url = ''
