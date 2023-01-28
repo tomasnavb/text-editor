@@ -1,4 +1,8 @@
-from encodings.utf_8_sig import encode
+# ######################################
+#              IMPORTS                 #
+# ######################################
+
+
 from tkinter import *
 from tkinter.ttk import *
 from tkinter.messagebox import *
@@ -22,6 +26,13 @@ font_style = 'arial'
 
 
 def find():
+    def find_word():
+        word = find_entry.get()
+        word_start = textarea.search(word, '1.0', stopindex=END)
+        word_end = f'{word_start} + {len(word)}c'
+        textarea.tag_add('match', word_start, word_end)
+        textarea.tag_config('match', foreground='red', background='yellow')
+
     find_window = Toplevel()
     find_window.title("Search")
     find_window.geometry("450x200+800+200")
@@ -36,7 +47,7 @@ def find():
     replace_label.grid(row=1, column=0, padx=5, pady=5)
     replace_entry = Entry(frame)
     replace_entry.grid(row=1, column=1, padx=10, pady=10)
-    find_button = Button(frame, text='FIND')
+    find_button = Button(frame, text='FIND', command=find_word)
     find_button.grid(row=2, column=0, padx=5, pady=5)
     replace_button = Button(frame, text='REPLACE')
     replace_button.grid(row=2, column=1, padx=5, pady=5)
