@@ -5,12 +5,42 @@ from tkinter.messagebox import *
 from tkinter import font, colorchooser, filedialog
 import os
 
-# #################
-# FUNCTIONALITIES ##
-###################
+# ######################################
+#          GLOBAL VARIABLES            #
+# ######################################
+
 
 url = ''
 filetypes = (('Text Files', '*txt'), ('All files', '*.*'))
+font_size = 12
+font_style = 'arial'
+
+
+# ######################################
+#          FUNCTIONALITIES             #
+# ######################################
+
+
+def find():
+    find_window = Toplevel()
+    find_window.title("Search")
+    find_window.geometry("450x200+800+200")
+    find_window.resizable(False, False)
+    frame = LabelFrame(find_window, text='Find/Replace')
+    frame.pack(pady=20)
+    find_label = Label(frame, text='Find')
+    find_label.grid(row=0, column=0, padx=5, pady=5)
+    find_entry = Entry(frame)
+    find_entry.grid(row=0, column=1, padx=10, pady=10)
+    replace_label = Label(frame, text='Replace')
+    replace_label.grid(row=1, column=0, padx=5, pady=5)
+    replace_entry = Entry(frame)
+    replace_entry.grid(row=1, column=1, padx=10, pady=10)
+    find_button = Button(frame, text='FIND')
+    find_button.grid(row=2, column=0, padx=5, pady=5)
+    replace_button = Button(frame, text='REPLACE')
+    replace_button.grid(row=2, column=1, padx=5, pady=5)
+    find_window.mainloop()
 
 
 def status_bar(event):
@@ -87,10 +117,6 @@ def exit():
         root.destroy()
 
 
-font_size = 12
-font_style = 'arial'
-
-
 def set_font_style(event):
     global font_style
     font_style = font_family_variable.get()
@@ -153,21 +179,21 @@ def center_align():
     textarea.insert(INSERT, data, 'center')
 
 
-# ####################################
-# VENTANA PRINCIPAL - CONFIGURACION  #
-######################################
+# ######################################
+#          MAIN WINDOW                 #
+# ######################################
+
+
 root = Tk()
 root.title("Text Editor")
 root.geometry("1200x620+10+10")  # Tamanio de la ventana. Ultimos dos valores ubicacion en X e Y
 root.resizable(False, False)
 
-# Configuracion de menubar
+# ######################################
+#              MENU BAR                #
+# ######################################
 menubar = Menu(root)
 root.config(menu=menubar)
-
-# #######################
-# MENUBAR - FILE MENU  #
-#########################
 filemenu = Menu(menubar, tearoff=False)
 menubar.add_cascade(label="File", menu=filemenu)
 # Importing buttons images
@@ -176,7 +202,12 @@ openImg = PhotoImage(file="icons/open.png")
 saveImg = PhotoImage(file="icons/save.png")
 saveAsImg = PhotoImage(file="icons/save_as.png")
 exitImg = PhotoImage(file="icons/exit.png")
-# Creating menu buttons
+
+# ######################################
+#              FILEMENU                #
+# ######################################
+
+
 filemenu.add_command(label="New", accelerator="Ctrl+N", image=newImg, compound=LEFT, command=new_file)
 filemenu.add_command(label="Open", accelerator="Ctrl+O", image=openImg, compound=LEFT, command=open_file)
 filemenu.add_command(label="Save", accelerator="Ctrl+S", image=saveImg, compound=LEFT, command=save_file)
@@ -184,9 +215,11 @@ filemenu.add_command(label="Save As", accelerator="Ctrl+Alt+S", image=saveAsImg,
 filemenu.add_separator()
 filemenu.add_command(label="Exit", accelerator="Ctrl+Q", image=exitImg, compound=LEFT, command=exit)
 
-# #######################
-# MENUBAR - EDIT MENU  #
-#########################
+# ######################################
+#              EDIT MENU               #
+# ######################################
+
+
 editmenu = Menu(menubar, tearoff=False)
 menubar.add_cascade(label="Edit", menu=editmenu)
 # Importing buttons images
@@ -204,11 +237,13 @@ editmenu.add_command(label="Paste", accelerator="Ctrl+B", image=pasteImg, compou
                      command=lambda: textarea.event_generate('<Control v>'))
 editmenu.add_command(label="Clear", accelerator="Ctrl+Alt+X", image=clearImg, compound=LEFT,
                      command=lambda: textarea.delete(0.0, END))
-editmenu.add_command(label="Find", accelerator="Ctrl+F", image=findImg, compound=LEFT)
+editmenu.add_command(label="Find", accelerator="Ctrl+F", image=findImg, compound=LEFT, command=find)
 
-# #######################
-# MENUBAR - VIEW MENU  #
-#########################
+# ######################################
+#              VIEW MENU               #
+# ######################################
+
+
 viewmenu = Menu(menubar, tearoff=False)
 menubar.add_cascade(label="View", menu=viewmenu)
 show_toolbar = BooleanVar()
@@ -222,9 +257,11 @@ viewmenu.add_checkbutton(label='Tool bar', variable=show_toolbar, onvalue=True, 
 viewmenu.add_checkbutton(label='Status bar', variable=show_statusbar, onvalue=True, offvalue=False, image=statusImg,
                          compound=LEFT)
 
-# #######################
-# MENUBAR - THEMES MENU  #
-#########################
+# ######################################
+#              THEMES MENU             #
+# ######################################
+
+
 themesmenu = Menu(menubar, tearoff=False)
 menubar.add_cascade(label="Themes", menu=themesmenu)
 theme_choice = StringVar()
@@ -241,15 +278,19 @@ themesmenu.add_radiobutton(label="Dark", variable=theme_choice, image=darkImg, c
 themesmenu.add_radiobutton(label="Pink", variable=theme_choice, image=pinkImg, compound=LEFT)
 themesmenu.add_radiobutton(label="Monokai", variable=theme_choice, image=monokaiImg, compound=LEFT)
 
-# ###########################
-# TOOLBAR - ADDING TOOLBAR  #
-#############################
+# ######################################
+#              TOOLBAR                 #
+# ######################################
+
+
 toolbar = Label(root)
 toolbar.pack(side=TOP, fill=X)
 
-# #################################
-# TOOLBAR - FONT-FAMILY COMBOBOX  #
-###################################
+# ######################################
+#              FONT-FAMILY             #
+# ######################################
+
+
 font_families = font.families()
 font_family_variable = StringVar()
 fontfamily_combobox = Combobox(toolbar, width=30, values=font_families, state='readonly',
@@ -260,9 +301,11 @@ fontfamily_combobox.current(font_families.index('Arial'))
 # ComboboxSelected Event
 fontfamily_combobox.bind('<<ComboboxSelected>>', set_font_style)
 
-# #################################
-# TOOLBAR - FONT-SIZE COMBOBOX  #
-###################################
+# ######################################
+#              FONT-SIZE               #
+# ######################################
+
+
 size_variable = IntVar()
 font_size_combobox = Combobox(toolbar, width=15, textvariable=size_variable, state='readonly',
                               values=tuple(range(8, 73, 4)))
@@ -272,9 +315,11 @@ font_size_combobox.grid(row=0, column=1, padx=5)
 # ComboboxSelected Event
 font_size_combobox.bind('<<ComboboxSelected>>', set_font_size)
 
-# #################################
-# TOOLBAR - BUTTONS SECTION  #
-###################################
+# ######################################
+#              BUTTONS                 #
+# ######################################
+
+
 bold_img = PhotoImage(file='icons/bold.png')
 bold_button = Button(toolbar, image=bold_img, command=set_text_bold)
 bold_button.grid(row=0, column=2, padx=5)
@@ -303,9 +348,11 @@ rightalign_img = PhotoImage(file='icons/right.png')
 rightalign_button = Button(toolbar, image=rightalign_img, command=right_align)
 rightalign_button.grid(row=0, column=8, padx=5)
 
-# ###########
-# TEXT AREA #
-#############
+# ######################################
+#              TEXT-AREA               #
+# ######################################
+
+
 scrollbar = Scrollbar(root)
 scrollbar.pack(side=RIGHT, fill=Y)
 textarea = Text(root, yscrollcommand=scrollbar.set, font=('arial', 12))
@@ -313,9 +360,10 @@ textarea.pack(fill=BOTH, expand=True)
 textarea.bind('<<Modified>>', status_bar)
 scrollbar.config(command=textarea.yview)
 
-# ###########
-# STATUSBAR #
-#############
+# ######################################
+#              STATUS-BAR             #
+# ######################################
+
 
 statusbar = Label(root, text='Status Bar')
 statusbar.pack(side=BOTTOM)
