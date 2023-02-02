@@ -27,6 +27,7 @@ font_style = 'arial'
 
 def find():
     def find_word():
+        textarea.tag_remove('match', 1.0, END)
         start_position = '1.0'
         word = find_entry.get()
         if word:
@@ -38,6 +39,15 @@ def find():
                 textarea.tag_add('match', start_position, end_position)
                 textarea.tag_config('match', foreground='red', background='yellow')
                 start_position = end_position
+
+    def replace():
+        word = find_entry.get()
+        new_word = replace_entry.get()
+        if new_word:
+            content = textarea.get(1.0, END)
+            new_content = content.replace(word, new_word)
+            textarea.delete(1.0, END)
+            textarea.insert(1.0, new_content)
 
     find_window = Toplevel()
     find_window.title("Search")
@@ -55,8 +65,14 @@ def find():
     replace_entry.grid(row=1, column=1, padx=10, pady=10)
     find_button = Button(frame, text='FIND', command=find_word)
     find_button.grid(row=2, column=0, padx=5, pady=5)
-    replace_button = Button(frame, text='REPLACE')
+    replace_button = Button(frame, text='REPLACE', command=replace)
     replace_button.grid(row=2, column=1, padx=5, pady=5)
+
+    def close_window():
+        textarea.tag_remove('match', 1.0, END)
+        find_window.destroy()
+
+    find_window.protocol('WM_DELETE_WINDOW', close_window)
     find_window.mainloop()
 
 
@@ -372,7 +388,7 @@ rightalign_button.grid(row=0, column=8, padx=5)
 
 scrollbar = Scrollbar(root)
 scrollbar.pack(side=RIGHT, fill=Y)
-textarea = Text(root, yscrollcommand=scrollbar.set, font=('arial', 12))
+textarea = Text(root, yscrollcommand=scrollbar.set, font=('arial', 12), undo=True)
 textarea.pack(fill=BOTH, expand=True)
 textarea.bind('<<Modified>>', status_bar)
 scrollbar.config(command=textarea.yview)
