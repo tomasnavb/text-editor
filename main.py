@@ -27,11 +27,17 @@ font_style = 'arial'
 
 def find():
     def find_word():
+        start_position = '1.0'
         word = find_entry.get()
-        word_start = textarea.search(word, '1.0', stopindex=END)
-        word_end = f'{word_start} + {len(word)}c'
-        textarea.tag_add('match', word_start, word_end)
-        textarea.tag_config('match', foreground='red', background='yellow')
+        if word:
+            while True:
+                start_position = textarea.search(word, start_position, stopindex=END)
+                if start_position == "":
+                    break
+                end_position = f'{start_position} + {len(word)}c'
+                textarea.tag_add('match', start_position, end_position)
+                textarea.tag_config('match', foreground='red', background='yellow')
+                start_position = end_position
 
     find_window = Toplevel()
     find_window.title("Search")
