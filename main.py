@@ -1,8 +1,3 @@
-# ######################################
-#              IMPORTS                 #
-# ######################################
-
-
 from tkinter import *
 from tkinter.ttk import *
 from tkinter.messagebox import *
@@ -74,6 +69,22 @@ def find():
 
     find_window.protocol('WM_DELETE_WINDOW', close_window)
     find_window.mainloop()
+
+
+def show_hide_toolbar():
+    if not show_toolbar.get():
+        toolbar.pack_forget()
+    else:
+        textarea.pack_forget()
+        toolbar.pack(fill=X)
+        textarea.pack(fill=BOTH, expand=True)
+
+
+def show_hide_statusbar():
+    if not show_statusbar.get():
+        statusbar.pack_forget()
+    else:
+        statusbar.pack()
 
 
 def status_bar(event):
@@ -219,8 +230,9 @@ def center_align():
 
 root = Tk()
 root.title("Text Editor")
-root.geometry("1200x620+10+10")  # Tamanio de la ventana. Ultimos dos valores ubicacion en X e Y
-root.resizable(False, False)
+root.geometry("800x600+10+10")  # Tamanio de la ventana. Ultimos dos valores ubicacion en X e Y
+root.minsize(300, 300)
+root.resizable(True, True)
 
 # ######################################
 #              MENU BAR                #
@@ -228,7 +240,7 @@ root.resizable(False, False)
 menubar = Menu(root)
 root.config(menu=menubar)
 filemenu = Menu(menubar, tearoff=False)
-menubar.add_cascade(label="File", menu=filemenu)
+menubar.add_cascade(label="File", menu=filemenu, )
 # Importing buttons images
 newImg = PhotoImage(file="icons/new.png")
 openImg = PhotoImage(file="icons/open.png")
@@ -286,9 +298,11 @@ toolImg = PhotoImage(file="icons/tool_bar.png")
 statusImg = PhotoImage(file="icons/status_bar.png")
 # Creating menu buttons
 viewmenu.add_checkbutton(label='Tool bar', variable=show_toolbar, onvalue=True, offvalue=False, image=toolImg,
-                         compound=LEFT)
+                         compound=LEFT, command=show_hide_toolbar)
 viewmenu.add_checkbutton(label='Status bar', variable=show_statusbar, onvalue=True, offvalue=False, image=statusImg,
-                         compound=LEFT)
+                         compound=LEFT, command=show_hide_statusbar)
+show_toolbar.set(True)
+show_statusbar.set(True)
 
 # ######################################
 #              THEMES MENU             #
@@ -355,7 +369,7 @@ font_size_combobox.bind('<<ComboboxSelected>>', set_font_size)
 
 bold_img = PhotoImage(file='icons/bold.png')
 bold_button = Button(toolbar, image=bold_img, command=set_text_bold)
-bold_button.grid(row=0, column=2, padx=5)
+bold_button.grid(row=0, column=2, padx=5, sticky="nsew")
 
 italic_img = PhotoImage(file='icons/italic.png')
 italic_button = Button(toolbar, image=italic_img, command=set_text_italic)
