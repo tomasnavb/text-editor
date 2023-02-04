@@ -19,6 +19,17 @@ font_style = 'arial'
 #          FUNCTIONALITIES             #
 # ######################################
 
+# def reorganize_buttons(event):
+#     window_width = root.winfo_width()
+#     if window_width < 650:
+#         bold_button.grid(row=3, column=0, padx=5)
+#         italic_button.grid(row=3, column=1, padx=5)
+#         underline_button.grid(row=3, column=2, padx=5)
+#         fontcolor_button.grid(row=3, column=3, padx=5)
+#         leftalign_button.grid(row=3, column=4, padx=5)
+#         centeralign_img.grid(row=3, column=5, padx=5)
+#         rightalign_img.grid(row=3, column=5, padx=5)
+
 
 def find():
     def find_word():
@@ -85,6 +96,27 @@ def show_hide_statusbar():
         statusbar.pack_forget()
     else:
         statusbar.pack()
+
+
+def reorganize_buttons(event):
+    window_width = root.winfo_width()
+    if window_width < 600:
+        print(window_width)
+        toolbar.rowconfigure(1, weight=1)
+        toolbar.columnconfigure(0, weight=2)
+        font_size_combobox.grid(row=2, sticky=SW)
+        fontfamily_combobox.grid(row=2, sticky=SW)
+        bold_button.grid(row=3, column=0, sticky=SE, padx=2)
+        italic_button.grid(row=3, column=1, sticky=SE, padx=2)
+        underline_button.grid(row=3, column=2, sticky=SE, padx=2)
+        fontcolor_button.grid(row=3, column=3, sticky=SE, padx=2)
+        leftalign_button.grid(row=3, column=4, sticky=SE, padx=2)
+        centeralign_button.grid(row=3, column=5, sticky=SE, padx=2)
+        rightalign_button.grid(row=3, column=6, sticky=SE, padx=2)
+
+    if window_width >= 600:
+        toolbar.rowconfigure(0, weight=0)
+        toolbar.columnconfigure(0, weight=0)
 
 
 def status_bar(event):
@@ -231,8 +263,10 @@ def center_align():
 root = Tk()
 root.title("Text Editor")
 root.geometry("800x600+10+10")  # Tamanio de la ventana. Ultimos dos valores ubicacion en X e Y
-root.minsize(300, 300)
+root.minsize(400, 300)
 root.resizable(True, True)
+root.update_idletasks()
+root.bind('<Configure>', reorganize_buttons)
 
 # ######################################
 #              MENU BAR                #
@@ -369,7 +403,7 @@ font_size_combobox.bind('<<ComboboxSelected>>', set_font_size)
 
 bold_img = PhotoImage(file='icons/bold.png')
 bold_button = Button(toolbar, image=bold_img, command=set_text_bold)
-bold_button.grid(row=0, column=2, padx=5, sticky="nsew")
+bold_button.grid(row=0, column=2, padx=5)
 
 italic_img = PhotoImage(file='icons/italic.png')
 italic_button = Button(toolbar, image=italic_img, command=set_text_italic)
