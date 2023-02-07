@@ -70,15 +70,25 @@ def find():
     find_window.mainloop()
 
 
-def status_bar(event):
-    chars = 0
+flag = None
+
+
+def edit_modified_flag(event):
+    global flag
     if textarea.edit_modified():
+        flag = True
+
+
+def status_bar(event):
+    global flag
+    chars = 0
+    if flag:
         content = textarea.get(0.0, END).split()
         words = len(content)
         for word in content:
             chars += len(word)
         statusbar.config(text=f'Characters: {chars} - Words: {words}')
-    textarea.edit_modified(False)
+    flag = False
 
 
 def new_file():
@@ -129,7 +139,7 @@ def save_file_as():
 
 def exit():
     global url
-    if textarea.edit_modified():
+    if flag:
         save = askyesnocancel(title='Warning', message='Do you want to save the file?')
         if not save and save is not None:
             root.destroy()
@@ -222,9 +232,21 @@ def show_hide_statusbar():
         statusbar.pack()
 
 
-def change_theme_color(primary_color, secondary_color, text_color):
-    toolbar.config(background=primary_color)
-    textarea.config(background=secondary_color, foreground=text_color, selectbackground=primary_color)
+def change_theme_color(label_color, text_area_color, button_color, text_color='#000000', theme='default'):
+    global icon
+    styles = Style()
+    toolbar.config(background=label_color)
+    textarea.config(background=text_area_color, foreground=text_color, selectbackground=label_color)
+    styles.configure("BG.TLabel", background=button_color)
+    for button in buttons:
+        button.config(style="BG.TLabel")
+    font_size_combobox.config(style="BG.TLabel")
+    fontfamily_combobox.config(style="BG.TLabel")
+    if theme == 'dark':
+        bat_icon = PhotoImage(file='icons/bat.png')
+        root.iconphoto(False, bat_icon)
+    else:
+        root.iconphoto(False, icon)
 
 
 # ######################################
@@ -327,10 +349,18 @@ monokaiImg = PhotoImage(file="icons/monokai.png")
 # Creating menu buttons
 themesmenu.add_radiobutton(label="Light default", variable=theme_choice, image=lightImg, compound=LEFT)
 themesmenu.add_radiobutton(label="Light Plus", variable=theme_choice, image=lighplusImg, compound=LEFT,
-                           command=lambda: change_theme_color('#48C9B0', '#EBF5FB', '#17202A'))
-themesmenu.add_radiobutton(label="Dark", variable=theme_choice, image=darkImg, compound=LEFT)
-themesmenu.add_radiobutton(label="Pink", variable=theme_choice, image=pinkImg, compound=LEFT)
-themesmenu.add_radiobutton(label="Monokai", variable=theme_choice, image=monokaiImg, compound=LEFT)
+                           command=lambda: change_theme_color(label_color='#92B9BD', text_area_color='#EEEEEE',
+                                                              button_color='#EEEEEE'))
+themesmenu.add_radiobutton(label="Dark", variable=theme_choice, image=darkImg, compound=LEFT,
+                           command=lambda: change_theme_color(label_color='#17202A', text_area_color='#1A5276',
+                                                              button_color='#ACACAC', text_color='#EAEAEA',
+                                                              theme='dark'))
+themesmenu.add_radiobutton(label="Cake", variable=theme_choice, image=pinkImg, compound=LEFT,
+                           command=lambda: change_theme_color(label_color='#A8D4AD', text_area_color='#F6CACA',
+                                                              button_color='#F6CACA', text_color='#0A014F'))
+themesmenu.add_radiobutton(label="Monokai", variable=theme_choice, image=monokaiImg, compound=LEFT,
+                           command=lambda: change_theme_color(label_color='#EE964B', text_area_color='#F4D35E',
+                                                              button_color='#FFDD4A'))
 
 # ######################################
 #              TOOLBAR                 #
@@ -402,16 +432,18 @@ rightalign_img = PhotoImage(file='icons/right.png')
 rightalign_button = Button(toolbar, image=rightalign_img, command=right_align)
 rightalign_button.grid(row=0, column=8, padx=5)
 
+buttons = [bold_button, italic_button, underline_button, fontcolor_button, leftalign_button, centeralign_button,
+           rightalign_button]
+
 # ######################################
 #              TEXT-AREA               #
 # ######################################
-
 
 scrollbar = Scrollbar(root)
 scrollbar.pack(side=RIGHT, fill=Y)
 textarea = Text(root, yscrollcommand=scrollbar.set, font=('arial', 12), undo=True)
 textarea.pack(fill=BOTH, expand=True)
-textarea.bind('<<Modified>>', status_bar)
+textarea.bind('<<Modified>>', edit_modified_flag)
 scrollbar.config(command=textarea.yview)
 
 # ######################################
@@ -421,6 +453,11 @@ scrollbar.config(command=textarea.yview)
 
 statusbar = Label(root, text='Status Bar')
 statusbar.pack(side=BOTTOM)
+
+# ######################################
+#              DEFAULT-STYLE           #
+# ######################################
+
 
 # End
 root.mainloop()
