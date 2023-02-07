@@ -19,18 +19,6 @@ font_style = 'arial'
 #          FUNCTIONALITIES             #
 # ######################################
 
-# def reorganize_buttons(event):
-#     window_width = root.winfo_width()
-#     if window_width < 650:
-#         bold_button.grid(row=3, column=0, padx=5)
-#         italic_button.grid(row=3, column=1, padx=5)
-#         underline_button.grid(row=3, column=2, padx=5)
-#         fontcolor_button.grid(row=3, column=3, padx=5)
-#         leftalign_button.grid(row=3, column=4, padx=5)
-#         centeralign_img.grid(row=3, column=5, padx=5)
-#         rightalign_img.grid(row=3, column=5, padx=5)
-
-
 def find():
     def find_word():
         textarea.tag_remove('match', 1.0, END)
@@ -80,43 +68,6 @@ def find():
 
     find_window.protocol('WM_DELETE_WINDOW', close_window)
     find_window.mainloop()
-
-
-def show_hide_toolbar():
-    if not show_toolbar.get():
-        toolbar.pack_forget()
-    else:
-        textarea.pack_forget()
-        toolbar.pack(fill=X)
-        textarea.pack(fill=BOTH, expand=True)
-
-
-def show_hide_statusbar():
-    if not show_statusbar.get():
-        statusbar.pack_forget()
-    else:
-        statusbar.pack()
-
-
-def reorganize_buttons(event):
-    window_width = root.winfo_width()
-    if window_width < 600:
-        print(window_width)
-        toolbar.rowconfigure(1, weight=1)
-        toolbar.columnconfigure(0, weight=2)
-        font_size_combobox.grid(row=2, sticky=SW)
-        fontfamily_combobox.grid(row=2, sticky=SW)
-        bold_button.grid(row=3, column=0, sticky=SE, padx=2)
-        italic_button.grid(row=3, column=1, sticky=SE, padx=2)
-        underline_button.grid(row=3, column=2, sticky=SE, padx=2)
-        fontcolor_button.grid(row=3, column=3, sticky=SE, padx=2)
-        leftalign_button.grid(row=3, column=4, sticky=SE, padx=2)
-        centeralign_button.grid(row=3, column=5, sticky=SE, padx=2)
-        rightalign_button.grid(row=3, column=6, sticky=SE, padx=2)
-
-    if window_width >= 600:
-        toolbar.rowconfigure(0, weight=0)
-        toolbar.columnconfigure(0, weight=0)
 
 
 def status_bar(event):
@@ -255,6 +206,27 @@ def center_align():
     textarea.insert(INSERT, data, 'center')
 
 
+def show_hide_toolbar():
+    if not show_toolbar.get():
+        toolbar.pack_forget()
+    else:
+        textarea.pack_forget()
+        toolbar.pack(fill=X)
+        textarea.pack(fill=BOTH, expand=True)
+
+
+def show_hide_statusbar():
+    if not show_statusbar.get():
+        statusbar.pack_forget()
+    else:
+        statusbar.pack()
+
+
+def change_theme_color(primary_color, secondary_color, text_color):
+    toolbar.config(background=primary_color)
+    textarea.config(background=secondary_color, foreground=text_color, selectbackground=primary_color)
+
+
 # ######################################
 #          MAIN WINDOW                 #
 # ######################################
@@ -263,10 +235,10 @@ def center_align():
 root = Tk()
 root.title("Text Editor")
 root.geometry("800x600+10+10")  # Tamanio de la ventana. Ultimos dos valores ubicacion en X e Y
-root.minsize(400, 300)
+root.minsize(650, 300)
 root.resizable(True, True)
-root.update_idletasks()
-root.bind('<Configure>', reorganize_buttons)
+icon = PhotoImage(file='icons/icon.png')
+root.iconphoto(False, icon)
 
 # ######################################
 #              MENU BAR                #
@@ -354,7 +326,8 @@ pinkImg = PhotoImage(file="icons/red.png")
 monokaiImg = PhotoImage(file="icons/monokai.png")
 # Creating menu buttons
 themesmenu.add_radiobutton(label="Light default", variable=theme_choice, image=lightImg, compound=LEFT)
-themesmenu.add_radiobutton(label="Light Plus", variable=theme_choice, image=lighplusImg, compound=LEFT)
+themesmenu.add_radiobutton(label="Light Plus", variable=theme_choice, image=lighplusImg, compound=LEFT,
+                           command=lambda: change_theme_color('#48C9B0', '#EBF5FB', '#17202A'))
 themesmenu.add_radiobutton(label="Dark", variable=theme_choice, image=darkImg, compound=LEFT)
 themesmenu.add_radiobutton(label="Pink", variable=theme_choice, image=pinkImg, compound=LEFT)
 themesmenu.add_radiobutton(label="Monokai", variable=theme_choice, image=monokaiImg, compound=LEFT)
