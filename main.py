@@ -70,30 +70,23 @@ def find():
     find_window.mainloop()
 
 
-flag = None
-
-
-def edit_modified_flag(event):
-    global flag
-    if textarea.edit_modified():
-        flag = True
-
-
 def status_bar(event):
-    global flag
+    global modified_flag
     chars = 0
-    if flag:
+    if textarea.edit_modified():
+        modified_flag = True
         content = textarea.get(0.0, END).split()
         words = len(content)
         for word in content:
             chars += len(word)
         statusbar.config(text=f'Characters: {chars} - Words: {words}')
-    flag = False
+    textarea.edit_modified(False)
 
 
 def new_file():
     global url
-    if textarea.edit_modified():
+    global modified_flag
+    if modified_flag:
         save = askyesnocancel(title='You didn\'t save your changes', message='Want to save your changes first?')
         if not save:
             textarea.delete(0.0, END)
@@ -139,7 +132,26 @@ def save_file_as():
 
 def exit():
     global url
-    if flag:
+    global modified_flag
+    if modified_flag:
+        save = askyesnocancel(title='Warning', message='Do you want to save the file?')
+        if not save and save is not None:
+            root.destroy()
+        elif save:
+            if url is None:
+                save_file_as()
+                root.destroy()
+            else:
+                save_file()
+                root.destroy()
+    else:
+        root.destroy()
+
+
+def cross_exit():
+    global url
+    global modified_flag
+    if modified_flag:
         save = askyesnocancel(title='Warning', message='Do you want to save the file?')
         if not save and save is not None:
             root.destroy()
@@ -443,8 +455,9 @@ scrollbar = Scrollbar(root)
 scrollbar.pack(side=RIGHT, fill=Y)
 textarea = Text(root, yscrollcommand=scrollbar.set, font=('arial', 12), undo=True)
 textarea.pack(fill=BOTH, expand=True)
-textarea.bind('<<Modified>>', edit_modified_flag)
+textarea.bind('<<Modified>>', status_bar)
 scrollbar.config(command=textarea.yview)
+modified_flag = False
 
 # ######################################
 #              STATUS-BAR             #
@@ -460,4 +473,5 @@ statusbar.pack(side=BOTTOM)
 
 
 # End
+root.protocol("WM_DELETE_WINDOW", cross_exit)
 root.mainloop()
