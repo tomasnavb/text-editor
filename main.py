@@ -133,7 +133,8 @@ def save_file_as():
 def exit():
     global url
     global modified_flag
-    if modified_flag:
+    content = len(textarea.get(1.0, END)) > 1
+    if modified_flag and content:
         save = askyesnocancel(title='Warning', message='Do you want to save the file?')
         if not save and save is not None:
             root.destroy()
@@ -151,7 +152,8 @@ def exit():
 def cross_exit():
     global url
     global modified_flag
-    if modified_flag:
+    content = len(textarea.get(1.0, END)) > 1
+    if modified_flag and content:
         save = askyesnocancel(title='Warning', message='Do you want to save the file?')
         if not save and save is not None:
             root.destroy()
