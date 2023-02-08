@@ -83,7 +83,7 @@ def status_bar(event):
     textarea.edit_modified(False)
 
 
-def new_file():
+def new_file(event=None):
     global url
     global modified_flag
     if modified_flag:
@@ -96,7 +96,7 @@ def new_file():
             save_file_as()
 
 
-def open_file():
+def open_file(event=None):
     global url
     url = filedialog.askopenfilename(title='Open Files', initialdir=os.getcwd(), filetypes=filetypes)
     if url != '':
@@ -105,7 +105,7 @@ def open_file():
         root.title(os.path.basename(url))
 
 
-def save_file():
+def save_file(event: None):
     if url == '':
         save_url = filedialog.asksaveasfile(mode='w', title='Save As', defaultextension='.txt', initialdir=os.getcwd(),
                                             filetypes=filetypes)
@@ -120,7 +120,7 @@ def save_file():
         file.write(content)
 
 
-def save_file_as():
+def save_file_as(event=None):
     save_url = filedialog.asksaveasfile(mode='w', title='Save As', defaultextension='.txt',
                                         initialdir=os.path.abspath(url),
                                         filetypes=filetypes, initialfile=os.path.basename(url))
@@ -130,7 +130,7 @@ def save_file_as():
         save_url.close()
 
 
-def exit():
+def exit(event=None):
     global url
     global modified_flag
     content = len(textarea.get(1.0, END)) > 1
@@ -301,6 +301,12 @@ filemenu.add_command(label="Save", accelerator="Ctrl+S", image=saveImg, compound
 filemenu.add_command(label="Save As", accelerator="Ctrl+Alt+S", image=saveAsImg, compound=LEFT, command=save_file_as)
 filemenu.add_separator()
 filemenu.add_command(label="Exit", accelerator="Ctrl+Q", image=exitImg, compound=LEFT, command=exit)
+
+root.bind('<Control-n>', new_file)
+root.bind('<Control-o>', open_file)
+root.bind('<Control-s>', save_file)
+root.bind('<Control-Alt-s>', save_file_as)
+root.bind('<Control-q>', exit)
 
 # ######################################
 #              EDIT MENU               #
