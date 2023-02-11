@@ -1,3 +1,4 @@
+import tkinter as tk
 from tkinter import *
 from tkinter.ttk import *
 from tkinter.messagebox import *
@@ -246,16 +247,17 @@ def show_hide_statusbar():
         statusbar.pack()
 
 
-def change_theme_color(label_color, text_area_color, button_color, text_color='#000000', theme='default'):
+def change_theme_color(label_color='#EEEEEE', text_area_color='#FFFFFF', button_color='#F5FBEF', text_color='#000000',
+                       theme=''):
     global icon
-    styles = Style()
     toolbar.config(background=label_color)
     textarea.config(background=text_area_color, foreground=text_color, selectbackground=label_color)
-    styles.configure("BG.TLabel", background=button_color)
     for button in buttons:
-        button.config(style="BG.TLabel")
-    font_size_combobox.config(style="BG.TLabel")
-    fontfamily_combobox.config(style="BG.TLabel")
+        button.config(bg=button_color)
+        if theme == 'monokai' or theme == 'dark':
+            button.config(relief='raised')
+        else:
+            button.config(relief='ridge')
     if theme == 'dark':
         bat_icon = PhotoImage(file='icons/bat.png')
         root.iconphoto(False, bat_icon)
@@ -282,7 +284,7 @@ root.iconphoto(False, icon)
 menubar = Menu(root)
 root.config(menu=menubar)
 filemenu = Menu(menubar, tearoff=False)
-menubar.add_cascade(label="File", menu=filemenu, )
+menubar.add_cascade(label="File", menu=filemenu)
 # Importing buttons images
 newImg = PhotoImage(file="icons/new.png")
 openImg = PhotoImage(file="icons/open.png")
@@ -367,7 +369,8 @@ darkImg = PhotoImage(file="icons/dark.png")
 pinkImg = PhotoImage(file="icons/red.png")
 monokaiImg = PhotoImage(file="icons/monokai.png")
 # Creating menu buttons
-themesmenu.add_radiobutton(label="Light default", variable=theme_choice, image=lightImg, compound=LEFT)
+themesmenu.add_radiobutton(label="Light default", variable=theme_choice, image=lightImg, compound=LEFT,
+                           command=lambda: change_theme_color())
 themesmenu.add_radiobutton(label="Light Plus", variable=theme_choice, image=lighplusImg, compound=LEFT,
                            command=lambda: change_theme_color(label_color='#92B9BD', text_area_color='#EEEEEE',
                                                               button_color='#EEEEEE'))
@@ -380,7 +383,7 @@ themesmenu.add_radiobutton(label="Cake", variable=theme_choice, image=pinkImg, c
                                                               button_color='#F6CACA', text_color='#0A014F'))
 themesmenu.add_radiobutton(label="Monokai", variable=theme_choice, image=monokaiImg, compound=LEFT,
                            command=lambda: change_theme_color(label_color='#EE964B', text_area_color='#F4D35E',
-                                                              button_color='#FFDD4A'))
+                                                              button_color='#FFDD4A', theme='monokai'))
 
 # ######################################
 #              TOOLBAR                 #
@@ -425,35 +428,36 @@ font_size_combobox.bind('<<ComboboxSelected>>', set_font_size)
 
 
 bold_img = PhotoImage(file='icons/bold.png')
-bold_button = Button(toolbar, image=bold_img, command=set_text_bold)
+bold_button = tk.Button(toolbar, image=bold_img, command=set_text_bold, cursor='hand2', relief='ridge')
 bold_button.grid(row=0, column=2, padx=5)
 
 italic_img = PhotoImage(file='icons/italic.png')
-italic_button = Button(toolbar, image=italic_img, command=set_text_italic)
+italic_button = tk.Button(toolbar, image=italic_img, command=set_text_italic, cursor='hand2', relief='ridge')
 italic_button.grid(row=0, column=3, padx=5)
 
 underline_img = PhotoImage(file='icons/underline.png')
-underline_button = Button(toolbar, image=underline_img, command=set_text_underline)
+underline_button = tk.Button(toolbar, image=underline_img, command=set_text_underline, cursor='hand2', relief='ridge')
 underline_button.grid(row=0, column=4, padx=5)
 
 fontcolor_img = PhotoImage(file='icons/font_color.png')
-fontcolor_button = Button(toolbar, image=fontcolor_img, command=select_color)
+fontcolor_button = tk.Button(toolbar, image=fontcolor_img, command=select_color, cursor='hand2', relief='ridge')
 fontcolor_button.grid(row=0, column=5, padx=5)
 
 leftalign_img = PhotoImage(file='icons/left.png')
-leftalign_button = Button(toolbar, image=leftalign_img, command=left_align)
+leftalign_button = tk.Button(toolbar, image=leftalign_img, command=left_align, cursor='hand2', relief='ridge')
 leftalign_button.grid(row=0, column=6, padx=5)
 
 centeralign_img = PhotoImage(file='icons/center.png')
-centeralign_button = Button(toolbar, image=centeralign_img, command=center_align)
+centeralign_button = tk.Button(toolbar, image=centeralign_img, command=center_align, cursor='hand2', relief='ridge')
 centeralign_button.grid(row=0, column=7, padx=5)
 
 rightalign_img = PhotoImage(file='icons/right.png')
-rightalign_button = Button(toolbar, image=rightalign_img, command=right_align)
+rightalign_button = tk.Button(toolbar, image=rightalign_img, command=right_align, cursor='hand2', relief='ridge')
 rightalign_button.grid(row=0, column=8, padx=5)
 
 buttons = [bold_button, italic_button, underline_button, fontcolor_button, leftalign_button, centeralign_button,
            rightalign_button]
+
 
 # ######################################
 #              TEXT-AREA               #
