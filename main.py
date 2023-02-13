@@ -331,18 +331,28 @@ root.bind('<Control-q>', exit)
 editmenu = Menu(menubar, tearoff=False)
 menubar.add_cascade(label="Edit", menu=editmenu)
 # Importing buttons images
+undoImg = PhotoImage(file="icons/undo.png")
+redoImg = PhotoImage(file="icons/redo.png")
 cutImg = PhotoImage(file="icons/cut.png")
 copyImg = PhotoImage(file="icons/copy.png")
 pasteImg = PhotoImage(file="icons/paste.png")
+selectImg = PhotoImage(file="icons/all.png")
 clearImg = PhotoImage(file="icons/clear_all.png")
 findImg = PhotoImage(file="icons/find.png")
 # Creating menu buttons
+editmenu.add_command(label="Undo", accelerator="Ctrl+Z", image=undoImg, compound=LEFT,
+                     command=lambda: textarea.event_generate('<Control z>'))
+editmenu.add_command(label="Redo", accelerator="Ctrl+Y", image=redoImg, compound=LEFT,
+                     command=lambda: textarea.event_generate('<Control y>'))
+editmenu.add_separator()
 editmenu.add_command(label="Cut", accelerator="Ctrl+X", image=cutImg, compound=LEFT,
                      command=lambda: textarea.event_generate('<Control x>'))
 editmenu.add_command(label="Copy", accelerator="Ctrl+C", image=copyImg, compound=LEFT,
                      command=lambda: textarea.event_generate('<Control c>'))
 editmenu.add_command(label="Paste", accelerator="Ctrl+B", image=pasteImg, compound=LEFT,
                      command=lambda: textarea.event_generate('<Control v>'))
+editmenu.add_command(label="Select all", accelerator="Ctrl+A", image=selectImg, compound=LEFT,
+                     command=lambda: textarea.event_generate('<Control a>'))
 editmenu.add_command(label="Clear", accelerator="Ctrl+Alt+X", image=clearImg, compound=LEFT,
                      command=lambda: textarea.delete(0.0, END))
 editmenu.add_command(label="Find", accelerator="Ctrl+F", image=findImg, compound=LEFT, command=find)
