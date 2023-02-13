@@ -3,8 +3,8 @@ from tkinter import *
 from tkinter.ttk import *
 from tkinter.messagebox import *
 from tkinter import font, colorchooser, filedialog
-from spellchecker import SpellChecker
 import os
+import tempfile
 
 # ######################################
 #          GLOBAL VARIABLES            #
@@ -107,7 +107,7 @@ def open_file(event=None):
         root.title(os.path.basename(url))
 
 
-def save_file(event: None):
+def save_file(event=None):
     if url == '':
         save_url = filedialog.asksaveasfile(mode='w', title='Save As', defaultextension='.txt', initialdir=os.getcwd(),
                                             filetypes=filetypes)
@@ -130,6 +130,12 @@ def save_file_as(event=None):
     if save_url is not None:
         save_url.write(content)
         save_url.close()
+
+
+def print_file(event=None):
+    file = tempfile.mktemp('.txt')
+    open(file, 'w').write(textarea.get(1.0, END))
+    os.startfile(file, 'print')
 
 
 def exit(event=None):
@@ -257,8 +263,10 @@ def change_theme_color(label_color='#EEEEEE', text_area_color='#FFFFFF', button_
         button.config(bg=button_color)
         if theme == 'monokai' or theme == 'dark':
             button.config(relief='raised')
+            style.theme_use('classic')
         else:
             button.config(relief='ridge')
+            style.theme_use('vista')
     if theme == 'dark':
         bat_icon = PhotoImage(file='icons/bat.png')
         root.iconphoto(False, bat_icon)
@@ -277,7 +285,8 @@ root.geometry("800x600+10+10")  # Tamanio de la ventana. Ultimos dos valores ubi
 root.resizable(False, False)
 icon = PhotoImage(file='icons/icon.png')
 root.iconphoto(False, icon)
-spell = SpellChecker()
+style = Style()
+style.theme_use('vista')
 
 # ######################################
 #              MENU BAR                #
@@ -291,6 +300,7 @@ newImg = PhotoImage(file="icons/new.png")
 openImg = PhotoImage(file="icons/open.png")
 saveImg = PhotoImage(file="icons/save.png")
 saveAsImg = PhotoImage(file="icons/save_as.png")
+printImg = PhotoImage(file="icons/printer.png")
 exitImg = PhotoImage(file="icons/exit.png")
 
 # ######################################
@@ -302,6 +312,7 @@ filemenu.add_command(label="New", accelerator="Ctrl+N", image=newImg, compound=L
 filemenu.add_command(label="Open", accelerator="Ctrl+O", image=openImg, compound=LEFT, command=open_file)
 filemenu.add_command(label="Save", accelerator="Ctrl+S", image=saveImg, compound=LEFT, command=save_file)
 filemenu.add_command(label="Save As", accelerator="Ctrl+Alt+S", image=saveAsImg, compound=LEFT, command=save_file_as)
+filemenu.add_command(label="Print", accelerator="Ctrl+P", image=printImg, compound=LEFT, command=print_file)
 filemenu.add_separator()
 filemenu.add_command(label="Exit", accelerator="Ctrl+Q", image=exitImg, compound=LEFT, command=exit)
 
@@ -309,6 +320,7 @@ root.bind('<Control-n>', new_file)
 root.bind('<Control-o>', open_file)
 root.bind('<Control-s>', save_file)
 root.bind('<Control-Alt-s>', save_file_as)
+root.bind('<Control-p>', print_file)
 root.bind('<Control-q>', exit)
 
 # ######################################
