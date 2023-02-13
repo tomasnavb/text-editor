@@ -3,6 +3,7 @@ from tkinter import *
 from tkinter.ttk import *
 from tkinter.messagebox import *
 from tkinter import font, colorchooser, filedialog
+from spellchecker import SpellChecker
 import os
 
 # ######################################
@@ -273,10 +274,10 @@ def change_theme_color(label_color='#EEEEEE', text_area_color='#FFFFFF', button_
 root = Tk()
 root.title("Text Editor")
 root.geometry("800x600+10+10")  # Tamanio de la ventana. Ultimos dos valores ubicacion en X e Y
-root.minsize(650, 300)
-root.resizable(True, True)
+root.resizable(False, False)
 icon = PhotoImage(file='icons/icon.png')
 root.iconphoto(False, icon)
+spell = SpellChecker()
 
 # ######################################
 #              MENU BAR                #
@@ -428,36 +429,38 @@ font_size_combobox.bind('<<ComboboxSelected>>', set_font_size)
 
 
 bold_img = PhotoImage(file='icons/bold.png')
-bold_button = tk.Button(toolbar, image=bold_img, command=set_text_bold, cursor='hand2', relief='ridge')
+bold_button = tk.Button(toolbar, image=bold_img, command=set_text_bold)
 bold_button.grid(row=0, column=2, padx=5)
 
 italic_img = PhotoImage(file='icons/italic.png')
-italic_button = tk.Button(toolbar, image=italic_img, command=set_text_italic, cursor='hand2', relief='ridge')
+italic_button = tk.Button(toolbar, image=italic_img, command=set_text_italic)
 italic_button.grid(row=0, column=3, padx=5)
 
 underline_img = PhotoImage(file='icons/underline.png')
-underline_button = tk.Button(toolbar, image=underline_img, command=set_text_underline, cursor='hand2', relief='ridge')
+underline_button = tk.Button(toolbar, image=underline_img, command=set_text_underline)
 underline_button.grid(row=0, column=4, padx=5)
 
 fontcolor_img = PhotoImage(file='icons/font_color.png')
-fontcolor_button = tk.Button(toolbar, image=fontcolor_img, command=select_color, cursor='hand2', relief='ridge')
+fontcolor_button = tk.Button(toolbar, image=fontcolor_img, command=select_color)
 fontcolor_button.grid(row=0, column=5, padx=5)
 
 leftalign_img = PhotoImage(file='icons/left.png')
-leftalign_button = tk.Button(toolbar, image=leftalign_img, command=left_align, cursor='hand2', relief='ridge')
+leftalign_button = tk.Button(toolbar, image=leftalign_img, command=left_align)
 leftalign_button.grid(row=0, column=6, padx=5)
 
 centeralign_img = PhotoImage(file='icons/center.png')
-centeralign_button = tk.Button(toolbar, image=centeralign_img, command=center_align, cursor='hand2', relief='ridge')
+centeralign_button = tk.Button(toolbar, image=centeralign_img, command=center_align)
 centeralign_button.grid(row=0, column=7, padx=5)
 
 rightalign_img = PhotoImage(file='icons/right.png')
-rightalign_button = tk.Button(toolbar, image=rightalign_img, command=right_align, cursor='hand2', relief='ridge')
+rightalign_button = tk.Button(toolbar, image=rightalign_img, command=right_align)
 rightalign_button.grid(row=0, column=8, padx=5)
 
 buttons = [bold_button, italic_button, underline_button, fontcolor_button, leftalign_button, centeralign_button,
            rightalign_button]
 
+for button in buttons:
+    button.config(bg='#F5FBEF', cursor='hand2', relief='ridge')
 
 # ######################################
 #              TEXT-AREA               #
