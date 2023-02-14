@@ -15,6 +15,7 @@ url = ''
 filetypes = (('Text Files', '*txt'), ('All files', '*.*'))
 font_size = 12
 font_style = 'arial'
+modified_flag = False
 
 
 # ######################################
@@ -259,13 +260,13 @@ def change_theme_color(label_color='#EEEEEE', text_area_color='#FFFFFF', button_
     global icon
     toolbar.config(background=label_color)
     textarea.config(background=text_area_color, foreground=text_color, selectbackground=label_color)
-    for button in buttons:
-        button.config(bg=button_color)
+    for btn in buttons:
+        btn.config(bg=button_color)
         if theme == 'monokai' or theme == 'dark':
-            button.config(relief='raised')
+            btn.config(relief='raised')
             style.theme_use('classic')
         else:
-            button.config(relief='ridge')
+            btn.config(relief='ridge')
             style.theme_use('vista')
     if theme == 'dark':
         bat_icon = PhotoImage(file='icons/bat.png')
@@ -332,7 +333,6 @@ editmenu = Menu(menubar, tearoff=False)
 menubar.add_cascade(label="Edit", menu=editmenu)
 # Importing buttons images
 undoImg = PhotoImage(file="icons/undo.png")
-redoImg = PhotoImage(file="icons/redo.png")
 cutImg = PhotoImage(file="icons/cut.png")
 copyImg = PhotoImage(file="icons/copy.png")
 pasteImg = PhotoImage(file="icons/paste.png")
@@ -342,8 +342,6 @@ findImg = PhotoImage(file="icons/find.png")
 # Creating menu buttons
 editmenu.add_command(label="Undo", accelerator="Ctrl+Z", image=undoImg, compound=LEFT,
                      command=lambda: textarea.event_generate('<Control z>'))
-editmenu.add_command(label="Redo", accelerator="Ctrl+Y", image=redoImg, compound=LEFT,
-                     command=lambda: textarea.event_generate('<Control y>'))
 editmenu.add_separator()
 editmenu.add_command(label="Cut", accelerator="Ctrl+X", image=cutImg, compound=LEFT,
                      command=lambda: textarea.event_generate('<Control x>'))
@@ -494,7 +492,6 @@ textarea = Text(root, yscrollcommand=scrollbar.set, font=('arial', 12), undo=Tru
 textarea.pack(fill=BOTH, expand=True)
 textarea.bind('<<Modified>>', status_bar)
 scrollbar.config(command=textarea.yview)
-modified_flag = False
 
 # ######################################
 #              STATUS-BAR             #
