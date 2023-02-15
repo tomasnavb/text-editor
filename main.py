@@ -83,7 +83,7 @@ def status_bar(event):
         words = len(content)
         for word in content:
             chars += len(word)
-        statusbar.config(text=f'Characters: {chars} - Words: {words}')
+        statusbar.config(text=f'Characters: {chars} | Words: {words}')
     textarea.edit_modified(False)
 
 
@@ -271,6 +271,10 @@ def change_theme_color(label_color='#EEEEEE', text_area_color='#FFFFFF', button_
         if theme == 'monokai' or theme == 'dark':
             btn.config(relief='raised')
             style.theme_use('classic')
+        elif theme == 'win98':
+            style.theme_use('winnative')
+            btn.config(bg=label_color)
+            btn.config(relief='groove')
         else:
             btn.config(relief='ridge')
             style.theme_use('vista')
@@ -395,8 +399,9 @@ theme_choice = StringVar()
 lightImg = PhotoImage(file="icons/light_default.png")
 lighplusImg = PhotoImage(file="icons/light_plus.png")
 darkImg = PhotoImage(file="icons/dark.png")
-pinkImg = PhotoImage(file="icons/red.png")
+cakeImg = PhotoImage(file="icons/cake.png")
 monokaiImg = PhotoImage(file="icons/monokai.png")
+windowsImg = PhotoImage(file="icons/windows.png")
 # Creating menu buttons
 themesmenu.add_radiobutton(label="Light default", variable=theme_choice, image=lightImg, compound=LEFT,
                            command=lambda: change_theme_color())
@@ -407,12 +412,14 @@ themesmenu.add_radiobutton(label="Dark", variable=theme_choice, image=darkImg, c
                            command=lambda: change_theme_color(label_color='#17202A', text_area_color='#1A5276',
                                                               button_color='#ACACAC', text_color='#EAEAEA',
                                                               theme='dark'))
-themesmenu.add_radiobutton(label="Cake", variable=theme_choice, image=pinkImg, compound=LEFT,
+themesmenu.add_radiobutton(label="Cake", variable=theme_choice, image=cakeImg, compound=LEFT,
                            command=lambda: change_theme_color(label_color='#A8D4AD', text_area_color='#F6CACA',
                                                               button_color='#F6CACA', text_color='#0A014F'))
 themesmenu.add_radiobutton(label="Monokai", variable=theme_choice, image=monokaiImg, compound=LEFT,
                            command=lambda: change_theme_color(label_color='#EE964B', text_area_color='#F4D35E',
                                                               button_color='#FFDD4A', theme='monokai'))
+themesmenu.add_radiobutton(label="Win98", variable=theme_choice, image=windowsImg, compound=LEFT,
+                           command=lambda: change_theme_color(theme='win98'))
 
 # ######################################
 #              TOOLBAR                 #
