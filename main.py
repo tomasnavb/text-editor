@@ -5,6 +5,7 @@ from tkinter.messagebox import *
 from tkinter import font, colorchooser, filedialog
 import os
 import tempfile
+from datetime import datetime
 
 # ######################################
 #          GLOBAL VARIABLES            #
@@ -84,6 +85,11 @@ def status_bar(event):
             chars += len(word)
         statusbar.config(text=f'Characters: {chars} - Words: {words}')
     textarea.edit_modified(False)
+
+
+def timedate():
+    now = datetime.now().strftime("%b-%d-%Y %H:%M:%S")
+    textarea.insert(tk.INSERT, ' ' + now)
 
 
 def new_file(event=None):
@@ -339,6 +345,7 @@ pasteImg = PhotoImage(file="icons/paste.png")
 selectImg = PhotoImage(file="icons/all.png")
 clearImg = PhotoImage(file="icons/clear_all.png")
 findImg = PhotoImage(file="icons/find.png")
+scheduleImg = PhotoImage(file="icons/schedule.png")
 # Creating menu buttons
 editmenu.add_command(label="Undo", accelerator="Ctrl+Z", image=undoImg, compound=LEFT,
                      command=lambda: textarea.event_generate('<Control z>'))
@@ -354,6 +361,7 @@ editmenu.add_command(label="Select all", accelerator="Ctrl+A", image=selectImg, 
 editmenu.add_command(label="Clear", accelerator="Ctrl+Alt+X", image=clearImg, compound=LEFT,
                      command=lambda: textarea.delete(0.0, END))
 editmenu.add_command(label="Find", accelerator="Ctrl+F", image=findImg, compound=LEFT, command=find)
+editmenu.add_command(label="Time/Date", accelerator="Ctrl+D", image=scheduleImg, compound=LEFT, command=timedate)
 
 # ######################################
 #              VIEW MENU               #
